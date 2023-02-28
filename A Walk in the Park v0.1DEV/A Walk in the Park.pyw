@@ -3,7 +3,6 @@ import random
 pygame.init()
 x,y=0,0
 screen=pygame.display.set_mode((600,600))
-level0Night=pygame.image.load('level0Night.png').convert()
 level0=pygame.image.load('level0.png').convert()
 level1=pygame.image.load('level1.png').convert()
 level2=pygame.image.load('level2.png').convert()
@@ -468,7 +467,6 @@ def moveLeft():
 def interact():
     global level,x,y,found1,Keys,found2,found3,found4,doorsUnlocked,found5,foundc,gameOver
     if level==level1 and x>200 and x<300 and y>200 and y<300 and found1==0:
-        print('you found a key!')
         found1=1
         Keys+=1
         screen.blit(text,(50,500))      
@@ -481,7 +479,6 @@ def interact():
             doorsUnlocked=1
         return
     if level==level7 and x>250 and x<300 and y>250 and y<300 and found2==0:
-        print('you found a key!')
         found2=1
         Keys+=1
         screen.blit(text,(50,500))      
@@ -494,7 +491,6 @@ def interact():
             doorsUnlocked=1
         return
     if level==level3 and x>300 and x<350 and y>500 and y<550 and found3==0:
-        print('you found a key!')
         found3=1
         Keys+=1
         screen.blit(text,(50,500))      
@@ -507,7 +503,6 @@ def interact():
             doorsUnlocked=1
         return
     if level==level6 and x>450 and y<30 and found4==0:
-        print('you found a key!')
         found4=1
         Keys+=1
         screen.blit(text,(50,500))      
@@ -532,7 +527,7 @@ def interact():
         pygame.time.wait(1000)
         return
     if level==level8a and x>250 and x<300 and y>300 and y<350 and foundc==1:
-        for jj in range(10000):   
+        for jj in range(1000):   
             nx=list(range(601))
             ny=list(range(601))
             nightShader.set_at((random.choice(nx),random.choice(ny)),(255,255,255,255))      
@@ -540,17 +535,18 @@ def interact():
         nightShader.fill((255,255,255))
         nightShader.set_alpha(255)
         screen.blit(textOver,(150,150))
+        pygame.display.update() 
         gameOver=1
         return
 curentSprite=dId
 logo=pygame.image.load('LOGOUP.png').convert()
 screen.blit(curentSprite,(x,y))
 lightRange=30
-litPixels=0
+
 def Light():
     nx=list(range(lightRange))
     ny=list(range(lightRange))
-    global litPixels,text,brightness
+    global text,brightness
     if darkness>=210:
         for i in range(lightRange):
             itemx=random.choice(range(len(nx)))
@@ -558,7 +554,6 @@ def Light():
             _=nightShader.get_at((itemx,itemy))
             if _==(0,0,0,255):
                 nightShader.set_at((x-nx[itemx],y-ny[itemy]),(0,0,0,0))
-                litPixels+=1
             nx.pop(itemx)
             ny.pop(itemy)
         nx=list(range(lightRange))
@@ -569,7 +564,7 @@ def Light():
             _=nightShader.get_at((itemx,itemy))
             if _==(0,0,0,255):
                 nightShader.set_at((x+nx[itemx],y+ny[itemy]),(0,0,0,0))
-                litPixels+=1
+                
             nx.pop(itemx)
             ny.pop(itemy) 
         nx=list(range(lightRange))
@@ -580,7 +575,6 @@ def Light():
             _=nightShader.get_at((itemx,itemy))
             if _==(0,0,0,255):
                 nightShader.set_at((x-nx[itemx],y+ny[itemy]),(0,0,0,0))
-                litPixels+=1
             nx.pop(itemx)
             ny.pop(itemy)  
         nx=list(range(lightRange))
@@ -591,21 +585,16 @@ def Light():
             _=nightShader.get_at((itemx,itemy))
             if _==(0,0,0,255):
                 nightShader.set_at((x+nx[itemx],y-ny[itemy]),(0,0,0,0))
-                litPixels+=1
             nx.pop(itemx)
             ny.pop(itemy)
-        brightness=litPixels/3600
 def unLight():
-    global litPixels,text,brightness
+    global text
     if darkness>=210:
         for i in range(600):
             item=(random.choice(range(600)),random.choice(range(600)))
             _=nightShader.get_at(item)
             if  _!=(0,0,0,255):  
                 nightShader.set_at(item,(0,0,0,255))
-                if litPixels!=0: 
-                    litPixels-=1
-            brightness=litPixels/3600
 def moveScary():
     global scaryX,scaryY,x,y
     if x>scaryX:
@@ -616,7 +605,7 @@ def moveScary():
     else: scaryY-=1
     screen.blit(scary,(scaryX,scaryY))
     pygame.display.update()
-    if scaryX==x and scaryY==y:
+    if scaryX>x-10 and scaryX<x+10 and scaryY>y-10 and scaryY<y+10:
         deathCheck=nightShader.get_at((random.choice(range(600)),random.choice(range(600))))
         if deathCheck==(110,0,0,255):
             print('You Died!')
@@ -659,7 +648,6 @@ while True:
     left,middle,right=pygame.mouse.get_pressed()
     if left:
         mouseX,mouseY=pygame.mouse.get_pos()
-        print(mouseX,mouseY)
         if mouseX>165 and mouseX<460 and mouseY>402 and mouseY<488:
             started=1
             break
@@ -699,8 +687,8 @@ if started==1:
                    changeLevel(4,3) 
                 if level==level5:  
                    changeLevel(5,8)
-            if x>200 and x<370 and y>200 and y<400 and level==level8 and unlock==0 or x>200 and x<370 and y>200 and y<400 and level==level8a and unlock==0:
-                x,y=450,300
+            if x>350 and x<370 and y>200 and y<400 and level==level8 and unlock==0 or x>350 and x<370 and y>200 and y<400 and level==level8a and unlock==0:
+                x=375
         if keys[pygame.K_RIGHT]or keys[pygame.K_d]:
             moveRight()
             if x<575:    
@@ -727,8 +715,8 @@ if started==1:
                    changeLevel(2,3) 
                 if level==level0:  
                    changeLevel(0,7)
-            if x>200 and x<370 and y>200 and y<400 and level==level8 and unlock==0 or x>200 and x<370 and y>200 and y<400 and level==level8a and unlock==0:
-                x,y=150,300
+            if x>200 and x<220 and y>220 and y<400 and level==level8 and unlock==0 or x>200 and x<220 and y>200 and y<400 and level==level8a and unlock==0:
+                x=190
         if keys[pygame.K_DOWN]or keys[pygame.K_s]:
             if y<570:
                 y+=3
@@ -757,8 +745,8 @@ if started==1:
                    changeLevel(7,8)
                 if level==level6:  
                    changeLevel(6,5)
-            if x>200 and x<370 and y>200 and y<400 and level==level8 and unlock==0 and doorsUnlocked==1:
-                x,y=300,150
+            if x>200 and x<370 and y>220 and y<240 and level==level8 and unlock==0 and doorsUnlocked==0:
+                y=210
         if keys[pygame.K_UP]or keys[pygame.K_w]:
             if y>3:    
                 y-=3
@@ -789,8 +777,8 @@ if started==1:
                    changeLevel(3,8)
                 if level==level4:  
                    changeLevel(4,5)
-            if x>200 and x<370 and y>200 and y<400 and level==level8 and unlock==0 or x>200 and x<370 and y>200 and y<400 and level==level8a and unlock==0:
-                x,y=300,450
+            if x>200 and x<370 and y>380 and y<400 and level==level8 and unlock==0 or x>200 and x<370 and y>380 and y<400 and level==level8a and unlock==0:
+                y=410
         #print(x,y)
         left,middle,right=pygame.mouse.get_pressed()
         if left:
@@ -815,8 +803,7 @@ if started==1:
                 if darkness>=210:
                     screen.blit(scary,(scaryX,scaryY))
                     screen.blit(text,(20,20))
-                    if brightness<=20:
-                       moveScary() 
+                    moveScary() 
                 pygame.display.update()
             else:
                 curentSprite=dId
@@ -831,8 +818,7 @@ if started==1:
                 if darkness>=210:
                     screen.blit(scary,(scaryX,scaryY))
                     screen.blit(text,(20,20))
-                    if brightness<=20:
-                       moveScary()
+                    moveScary()
                 pygame.display.update()
             if gameOver==1:
                 screen.blit(nightShader,(0,0))
